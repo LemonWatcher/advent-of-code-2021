@@ -4,8 +4,9 @@ My repository of solutions to [2021's advent of code](https://adventofcode.com/2
 
 ## Structure
 
-Each namespace is named for a day, tests are kept alongside
-solutions, and Marginalia docs are kept in the doc folder.
+Each namespace is named for a day, tests are kept alongside solutions,
+and Marginalia docs are built and hosted on [GitHub
+pages](https://lemonwatcher.github.io/advent-of-code-2021/).
 
 ## License
 
