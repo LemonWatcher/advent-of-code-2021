@@ -2866,7 +2866,7 @@ net.brehaut.ClojureTools = (function (SH) {
   };
 })(SyntaxHighlighter);
 </script><title>advent-of-code-2021 -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">advent-of-code-2021</h1><h2 class="project-version">1.1.0</h2><br /><p>Advent of Code 2021</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/test.check</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">net.cgrand/xforms</td><td class="dotted"><hr /></td><td class="dep-version">0.19.2</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#advent-of-code-2021.day-01">advent-of-code-2021.day-01</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#advent-of-code-2021.day-01" name="advent-of-code-2021.day-01"><h1 class="project-name">advent-of-code-2021.day-01</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/test.check</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">net.cgrand/xforms</td><td class="dotted"><hr /></td><td class="dep-version">0.19.2</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#advent-of-code-2021.day-01">advent-of-code-2021.day-01</a></li><li><a href="#advent-of-code-2021.day-02">advent-of-code-2021.day-02</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#advent-of-code-2021.day-01" name="advent-of-code-2021.day-01"><h1 class="project-name">advent-of-code-2021.day-01</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Advent of Code 2021, Day 1: Sonar Sweep</p>
 </td><td class="codes"><pre class="brush: clojure">(ns advent-of-code-2021.day-01
   (:require [clojure.java.io :refer [resource]]
             [clojure.string :refer [split-lines]]
@@ -2917,8 +2917,10 @@ elements of coll.</p>
               (rf result (- input p))
               result)))))))
   ([coll]
-   (sequence (deltas) coll)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def increases (comp (deltas) (filter pos?)))</pre></td></tr><tr><td class="docs"><p>To do this, count the number of times a depth measurement increases
+   (sequence (deltas) coll)))</pre></td></tr><tr><td class="docs"><p>Transducer that returnes positive differences between successive
+elements.</p>
+</td><td class="codes"><pre class="brush: clojure">(def increases
+  (comp (deltas) (filter pos?)))</pre></td></tr><tr><td class="docs"><p>To do this, count the number of times a depth measurement increases
 from the previous measurement. (There is no measurement before the
 first measurement.)</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Count the number of times the depths increase from item to the next.</p>
@@ -2963,8 +2965,10 @@ considering the above example:</p>
 260      G H
 263        H
 </code></pre>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def sliding-window (comp (x/window 3 + -) (drop 2)))</pre></td></tr><tr><td class="docs"><p>Start by comparing the first and second three-measurement
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Transducer that returns a sliding window of 3 elements over its
+input.</p>
+</td><td class="codes"><pre class="brush: clojure">(def sliding-window
+  (comp (x/window 3 + -) (drop 2)))</pre></td></tr><tr><td class="docs"><p>Start by comparing the first and second three-measurement
 windows. The measurements in the first window are marked A (199,
 200, 208); their sum is 199 + 200 + 208 = 607. The second window is
 marked B (200, 208, 210); its sum is 618. The sum of measurements
@@ -2975,7 +2979,8 @@ measurements in this sliding window increases from the previous
 sum. So, compare A with B, then compare B with C, then C with D,
 and so on. Stop when there aren't enough measurements left to
 create a new three-measurement sum.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Count the number of times the depths increase from one window to the
+next.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn count-window-increases
   [depths]
   (count (sequence (comp sliding-window increases) depths)))</pre></td></tr><tr><td class="docs"><p>In the above example, the sum of each three-measurement window is as follows:</p>
@@ -2992,7 +2997,152 @@ H: 792 (increased)
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(deftest window-increases-test
   (is (= 5 (count-window-increases test-input)))
-  (is (= 1567 (count-window-increases input))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_advent-of-code-2021.day-01">advent-of-code-2021.day-01</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+  (is (= 1567 (count-window-increases input))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#advent-of-code-2021.day-02" name="advent-of-code-2021.day-02"><h1 class="project-name">advent-of-code-2021.day-02</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Advent of Code 2021, Day 2: Dive!</p>
+</td><td class="codes"><pre class="brush: clojure">(ns advent-of-code-2021.day-02
+  (:require [clojure.java.io :refer [resource]]
+            [clojure.string :refer [split-lines split]]
+            [net.cgrand.xforms :as x]
+            [clojure.test :refer [deftest is]]))</pre></td></tr><tr><td class="docs"><h1>Day 2: Dive!</h1>
+
+<p>Now, you need to figure out how to pilot this thing.</p>
+
+<p>It seems like the submarine can take a series of commands like
+forward 1, down 2, or up 3:</p>
+
+<p>forward X increases the horizontal position by X units.
+down X increases the depth by X units.
+up X decreases the depth by X units.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Process a single submarine command given the current position.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn submarine-command
+  [[horizontal depth] [command units]]
+  (case command
+    &quot;forward&quot; [(+ horizontal units) depth]
+    &quot;down&quot; [horizontal (+ depth units)]
+    &quot;up&quot; [horizontal (- depth units)]))</pre></td></tr><tr><td class="docs"><p>Note that since you're on a submarine, down and up affect your
+depth, and so they have the opposite result of what you might
+expect.</p>
+
+<p>The submarine seems to already have a planned course (your puzzle
+input). You should probably figure out where it's going. For
+example:</p>
+
+<pre><code>forward 5
+down 5
+forward 8
+up 3
+down 8
+forward 2
+</code></pre>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def test-input
+  [[&quot;forward&quot; 5]
+   [&quot;down&quot; 5]
+   [&quot;forward&quot; 8]
+   [&quot;up&quot; 3]
+   [&quot;down&quot; 8]
+   [&quot;forward&quot; 2]])</pre></td></tr><tr><td class="docs"><p>Your horizontal position and depth both start at 0.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def initial-position [0 0])</pre></td></tr><tr><td class="docs"><p>The steps above would then modify them as follows:</p>
+
+<ul>
+<li>forward 5 adds 5 to your horizontal position, a total of 5.</li>
+<li>down 5 adds 5 to your depth, resulting in a value of 5.</li>
+<li>forward 8 adds 8 to your horizontal position, a total of 13.</li>
+<li>up 3 decreases your depth by 3, resulting in a value of 2.</li>
+<li>down 8 adds 8 to your depth, resulting in a value of 10.</li>
+<li>forward 2 adds 2 to your horizontal position, a total of 15.</li>
+</ul>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Navigate the submarine from initial position following all the
+supplied commands.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn navigate-submarine
+  [initial-position commands]
+  (reduce submarine-command initial-position commands))</pre></td></tr><tr><td class="docs"><p>After following these instructions, you would have a horizontal
+position of 15 and a depth of 10. (Multiplying these together
+produces 150.)</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(deftest navigate-submarine-test
+  (= [15 10] (navigate-submarine initial-position test-input)))</pre></td></tr><tr><td class="docs"><p>Calculate the horizontal position and depth you would have after
+following the planned course. What do you get if you multiply your
+final horizontal position by your final depth?</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Load our test input and separate it into vectors containing the
+command as a string and units as an integer.</p>
+</td><td class="codes"><pre class="brush: clojure">(def input
+  (-&gt;&gt; &quot;day_02.txt&quot;
+       resource
+       slurp
+       split-lines
+       (mapv (comp #(vector (first %) (Integer. (second %)))
+                   #(split % #&quot; &quot;)))))</pre></td></tr><tr><td class="docs"><p>Calculate the product of horizontal and depth position after
+following commands.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn submarine-answer
+  [initial-position commands]
+  (let [[h d] (navigate-submarine initial-position commands)]
+    (* h d)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(deftest submarine-answer-test
+  (is (= 2039256 (submarine-answer initial-position input))))</pre></td></tr><tr><td class="docs"><h1>Part Two</h1>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Based on your calculations, the planned course doesn't seem to make
+any sense. You find the submarine manual and discover that the
+process is actually slightly more complicated.</p>
+
+<p>In addition to horizontal position and depth, you'll also need to
+track a third value, aim, which also starts at 0.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def initial-position-with-aim
+  [0 0 0])</pre></td></tr><tr><td class="docs"><p>The commands also mean something entirely different than you first thought:</p>
+
+<ul>
+<li>down X increases your aim by X units.</li>
+<li>up X decreases your aim by X units.</li>
+<li>forward X does two things:
+<ul><li>It increases your horizontal position by X units.</li>
+<li>It increases your depth by your aim multiplied by X.</li></ul></li>
+</ul>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Navigate the submarine from initial position including an aim
+component, following all the supplied commands.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn navigate-submarine-with-aim
+  [initial-position commands]
+  (reduce (fn [[horizontal depth aim] [command units]]
+            (case command
+              &quot;forward&quot; [(+ horizontal units) (+ depth (* aim units)) aim]
+              &quot;down&quot; [horizontal depth (+ aim units)]
+              &quot;up&quot; [horizontal depth (- aim units)]))
+          initial-position
+          commands))</pre></td></tr><tr><td class="docs"><p>Again note that since you're on a submarine, down and up do the
+opposite of what you might expect: "down" means aiming in the
+positive direction.</p>
+
+<p>Now, the above example does something different:</p>
+
+<ul>
+<li>forward 5 adds 5 to your horizontal position, a total of
+<ol><li>Because your aim is 0, your depth does not change.</li></ol></li>
+<li>down 5 adds 5 to your aim, resulting in a value of 5.</li>
+<li>forward 8 adds 8 to your horizontal position, a total of
+<ol><li>Because your aim is 5, your depth increases by 8*5=40.</li></ol></li>
+<li>up 3 decreases your aim by 3, resulting in a value of 2.</li>
+<li>down 8 adds 8 to your aim, resulting in a value of 10.</li>
+<li>forward 2 adds 2 to your horizontal position, a total of
+<ol><li>Because your aim is 10, your depth increases by 2*10=20 to a
+total of 60.</li></ol></li>
+</ul>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>After following these new instructions, you would have a horizontal
+position of 15 and a depth of 60. (Multiplying these produces 900.)</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(deftest navigate-submarine-with-aim-test
+  (let [[horizontal depth _] (navigate-submarine-with-aim initial-position-with-aim test-input)]
+    (is (= 15 horizontal))
+    (is (= 60 depth))))</pre></td></tr><tr><td class="docs"><p>Using this new interpretation of the commands, calculate the
+horizontal position and depth you would have after following the
+planned course. What do you get if you multiply your final
+horizontal position by your final depth?</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Calculate the product of horizontal and depth position after
+following commands.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn submarine-aim-answer
+  [initial-position commands]
+  (let [[h d _] (navigate-submarine-with-aim initial-position commands)]
+    (* h d)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(deftest submarine-aim-answer-test
+  (is (= 1856459736 (submarine-aim-answer initial-position-with-aim input))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_advent-of-code-2021.day-01">advent-of-code-2021.day-01</li><li class="floating-toc-li" id="floating-toc_advent-of-code-2021.day-02">advent-of-code-2021.day-02</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
 SyntaxHighlighter.all();
 
 // hackity hack
