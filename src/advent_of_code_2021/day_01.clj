@@ -1,4 +1,5 @@
 (ns advent-of-code-2021.day-01
+  "Advent of Code 2021, Day 1: Sonar Sweep"
   (:require [clojure.java.io :refer [resource]]
             [clojure.string :refer [split-lines]]
             [net.cgrand.xforms :as x]
@@ -55,7 +56,10 @@
   ([coll]
    (sequence (deltas) coll)))
 
-(def increases (comp (deltas) (filter pos?)))
+(def increases
+  "Transducer that returnes positive differences between successive
+  elements."
+  (comp (deltas) (filter pos?)))
 
 ;; To do this, count the number of times a depth measurement increases
 ;; from the previous measurement. (There is no measurement before the
@@ -107,7 +111,10 @@
 ;;     260      G H
 ;;     263        H
 
-(def sliding-window (comp (x/window 3 + -) (drop 2)))
+(def sliding-window
+  "Transducer that returns a sliding window of 3 elements over its
+  input."
+  (comp (x/window 3 + -) (drop 2)))
 
 ;; Start by comparing the first and second three-measurement
 ;; windows. The measurements in the first window are marked A (199,
@@ -123,6 +130,8 @@
 ;; create a new three-measurement sum.
 
 (defn count-window-increases
+  "Count the number of times the depths increase from one window to the
+  next."
   [depths]
   (count (sequence (comp sliding-window increases) depths)))
 
