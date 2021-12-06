@@ -1,4 +1,5 @@
 # Advent of Code 2020
+![Build](https://github.com/LemonWatcher/advent-of-code-2021/actions/workflows/build.yaml/badge.svg)
 
 My repository of solutions to [2021's advent of code](https://adventofcode.com/2021), in Clojure.
 
