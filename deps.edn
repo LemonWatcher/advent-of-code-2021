@@ -3,7 +3,7 @@
  :paths ["src" "resources"]
  :aliases {:doc {:extra-deps {marginalia/marginalia {:git/url "https://github.com/zilti/marginalia" :sha "a9046a3e72184db871fb00140e851cb14328e7b2"}}
                  :main-opts ["-m" "marginalia.main"
-                             "-d" "doc"
+                             "-d" "docs"
                              "-f" "index.html"
                              "-n" "advent-of-code-2021"
                              "-D" "Advent of Code 2021"

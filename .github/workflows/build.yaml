@@ -26,5 +26,5 @@ jobs:
       - run: clojure -Mdoc
       - uses: EndBug/add-and-commit@v7
         with:
-          add: 'doc'
+          add: 'docs'
           message: 'Updating Marginalia docs.'
