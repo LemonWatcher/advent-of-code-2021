@@ -1,0 +1,30 @@
+name: Build
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest]        
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          java-package: 'jdk'
+          java-version: '17'
+          distribution: 'zulu'
+      - uses: DeLaGuardo/setup-clojure@3.6
+        with:
+          cli: 1.10.3.1040
+      - run: clojure -Xtest
+      - run: clojure -Mdoc
+      - uses: EndBug/add-and-commit@v7
+        with:
+          add: 'doc'
+          message: 'Updating Marginalia docs.'
